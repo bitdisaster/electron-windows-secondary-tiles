@@ -134,14 +134,13 @@ void Test(HWND hWnd)
 	options->ShowNameOnWide310x150Logo = true;
 	options->BackgroundColor = "#FF00FF";
 	options->ForegroundText = SecondaryTiles::ForegroundText::Light;
-	options->Wide310x150Logo = L"ms-appx:///images/Wide310x150Logo.png";
-	options->Square44x44Logo = L"ms-appx:///images/Square44x44Logo.png";
-	options->Square310x310Logo = L"ms-appx:///images/Square310x310Logo.png";
-	options->Square70x70Logo = L"ms-appx:///images/Square70x70Logo.png";
+	options->Square150x150Logo = "ms-appx:///images/Square150x150Logo.png";
+	options->Wide310x150Logo = "ms-appx:///images/Wide310x150Logo.png";
+	options->Square310x310Logo = "ms-appx:///images/Square310x310Logo.png";
+	options->Square70x70Logo = "undefined"; // "ms-appx:///images/Square70x70Logo.png";
 
-	SecondaryTiles::RequestCreateAsync(hWnd, L"Tile1", L"Hello Options", L"tileId=Tile1", L"ms-appx:///images/Square150x150Logo.png", SecondaryTiles::TileSize::Default, *options);
-	
-	//SecondaryTiles::Test(hWnd);
+	SecondaryTiles::RequestCreate(hWnd, "Tile1", L"Hello Options X", "tileId=Tile1", SecondaryTiles::TileSize::Default, *options);
+	//SecondaryTiles::RequestCreateAsync(hWnd, L"Tile1", L"Hello Options Y", L"tileId=Tile1", L"ms-appx:///images/Square150x150Logo.png", true);
 }
 
 //
@@ -205,7 +204,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		CreateWindowEx(
 			NULL,
 			L"button",
-			L"Update Secondary Tile",
+			L"Notify Secondary Tile",
 			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON,
 			50,
 			200,
@@ -239,7 +238,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case 201:
 			if (wmEvent == BN_CLICKED)
 			{
-				if (SecondaryTiles::SecondaryTileExists(L"Tile1"))
+				if (SecondaryTiles::Exists("Tile1"))
 				{
 					MessageBox(NULL, L"TRUE", L"Tile EXISTS", NULL);
 				}
@@ -252,13 +251,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case 202:
 			if (wmEvent == BN_CLICKED)
 			{
-				SecondaryTiles::RequestDeleteAsync(L"Tile1");
+				SecondaryTiles::RequestDelete("Tile1");
 			}
 			break;
 		case 203:
 			if (wmEvent == BN_CLICKED)
 			{
-				SecondaryTiles::Update(L"Tile1");
+				SecondaryTiles::Notify("Tile1", "");
 			}
 			break;
 		default:

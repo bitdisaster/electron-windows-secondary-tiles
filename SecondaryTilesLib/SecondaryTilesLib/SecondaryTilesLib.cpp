@@ -20,49 +20,60 @@ using namespace Windows::UI::Notifications;
 using namespace Windows::Data::Xml::Dom;
 
 
-const wstring msAppx = L"ms-appx:///";
-const wstring msData = L"ms-appdata:///";
+const wstring msAppxW = L"ms-appx:///";
+const wstring msDataW = L"ms-appdata:///";
 
-void SecondaryTiles::Test(HWND hWnd)
+const string msAppx = "ms-appx:///";
+const string msData = "ms-appdata:///";
+
+wstring ToWString(string str)
 {
-	IInitializeWithWindow* pIInitializeWithWindow;
-
-	auto square150x150Logo = ref new Uri("ms-appx:///images/Square150x150Logo.png");
-
-	Platform::String ^id = "Bridge-2";
-	Platform::String ^title = "Bridge Sec";
-	Platform::String ^args = "launchme";
-
-	auto secondaryTile = ref new SecondaryTile(id,
-		title,
-		args,
-		square150x150Logo,
-		Windows::UI::StartScreen::TileSize::Square150x150);
-
-	secondaryTile->VisualElements->ShowNameOnSquare150x150Logo = true;
-
-	IInspectable* iInspectable = reinterpret_cast<IInspectable*>(secondaryTile);
-	if (SUCCEEDED(iInspectable->QueryInterface(IID_PPV_ARGS(&pIInitializeWithWindow))))
-	{
-		pIInitializeWithWindow->Initialize((HWND)(void *)hWnd);
-
-		secondaryTile->RequestCreateAsync();
-	}
-
-	MessageBox(NULL, NULL, NULL, NULL);
-
-	return;
+	std::wstring ws;
+	ws.assign(str.begin(), str.end());
+	return	ws.c_str();
 }
 
+Platform::String^ ToPlatformString(string str)
+{
+	std::wstring ws(str.begin(), str.end());
+	return ref new Platform::String(ws.c_str());
+}
 
 Platform::String^ ToPlatformString(wstring str)
 {
 	return ref new Platform::String(str.c_str());
 }
 
+Platform::String^ ToPlatformString(PCWSTR str)
+{
+	return ref new Platform::String(str);
+}
+
+bool IsValidImageUri(string uriString)
+{
+	return !uriString.empty() && (uriString.find(msAppx, 0) == 0 || uriString.find(msData, 0) == 0);
+}
+
+bool IsValidImageUri(wstring uriString)
+{
+	return !uriString.empty() && (uriString.find(msAppxW, 0) == 0 || uriString.find(msDataW, 0) == 0);
+}
+
 Uri^ GetUriSafe(wstring uriString)
 {
-	if (uriString.empty() || (uriString.find(msAppx, 0) != 0 && uriString.find(msData, 0) != 0))
+	if (!IsValidImageUri(uriString))
+	{
+		return ref new Uri(ToPlatformString(L"ms-appx:///"));
+	}
+	else
+	{
+		return ref new Uri(ToPlatformString(uriString));
+	}
+}
+
+Uri^ GetUriSafe(string uriString)
+{
+	if (!IsValidImageUri(uriString))
 	{
 		return ref new Uri(ToPlatformString(L"ms-appx:///"));
 	}
@@ -87,6 +98,21 @@ Windows::UI::Color HexToUIColor(string hexCode)
 	return Windows::UI::ColorHelper::FromArgb(255, r, g, b);
 }
 
+Windows::UI::StartScreen::TileSize ToUITileSize(SecondaryTiles::TileSize tilSize)
+{
+	switch (tilSize)
+	{
+	case SecondaryTiles::TileSize::Default:
+		return Windows::UI::StartScreen::TileSize::Default;
+	case SecondaryTiles::TileSize::Square150x150:
+		return Windows::UI::StartScreen::TileSize::Square150x150;
+	case SecondaryTiles::TileSize::Wide310x150:
+		return Windows::UI::StartScreen::TileSize::Wide310x150;
+	default:
+		throw new invalid_argument("Unknown tile size");
+	}
+}
+
 std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondaryTile)
 {
 	IInitializeWithWindow* pIInitializeWithWindow;
@@ -102,96 +128,101 @@ std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondary
 	}
 }
 
-std::future<void> SecondaryTiles::RequestCreateAsync(HWND hWnd, wstring tileId, wstring displayName, wstring arguments, wstring squareLogo150x150Uri, TileSize desiredSize)
+SecondaryTile^ CreateTile(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
 {
 	auto secondaryTile = ref new SecondaryTile(
 		ToPlatformString(tileId),
 		ToPlatformString(displayName),
 		ToPlatformString(arguments),
 		GetUriSafe(squareLogo150x150Uri),
-		(Windows::UI::StartScreen::TileSize)desiredSize);
+		ToUITileSize(SecondaryTiles::TileSize::Default));
 
-	co_await RequestCreateInternalAsync(hWnd, secondaryTile);
+	secondaryTile->VisualElements->ShowNameOnSquare150x150Logo = showNameOnSquare150x150Logo;
+	secondaryTile->RoamingEnabled = roamingEnabled;
+
+	return secondaryTile;
 }
 
-std::future<void> SecondaryTiles::RequestCreateAsync(HWND hWnd, wstring tileId, wstring displayName, wstring arguments, wstring squareLogo150x150Uri, TileSize desiredSize, TileOptions options)
+SecondaryTile^ CreateTile(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
 	auto secondaryTile = ref new SecondaryTile(
 		ToPlatformString(tileId),
 		ToPlatformString(displayName),
 		ToPlatformString(arguments),
-		GetUriSafe(squareLogo150x150Uri),
-		(Windows::UI::StartScreen::TileSize)desiredSize);
+		GetUriSafe(options.Square150x150Logo),
+		ToUITileSize(desiredSize));
 
-	secondaryTile->RoamingEnabled = options.RoamingEnabled;
-
-	if (options.LockScreenBadgeLogo.find(msAppx, 0) == 0 || options.LockScreenBadgeLogo.find(msData, 0) == 0)
-	{
-		secondaryTile->LockScreenBadgeLogo = GetUriSafe(options.LockScreenBadgeLogo);
-	}
-	
-	secondaryTile->LockScreenDisplayBadgeAndTileText = options.LockScreenDisplayBadgeAndTileText;
-
-	if (options.Square30x30Logo.find(msAppx, 0) == 0 || options.Square30x30Logo.find(msData, 0) == 0)
-	{
-		secondaryTile->VisualElements->Square30x30Logo = GetUriSafe(options.Square30x30Logo);
-	}
-
-	if (options.Square310x310Logo.find(msAppx, 0) == 0 || options.Square310x310Logo.find(msData, 0) == 0)
-	{
-		secondaryTile->VisualElements->Square310x310Logo = GetUriSafe(options.Square310x310Logo);
-	}
-
-	if (options.Square44x44Logo.find(msAppx, 0) == 0 || options.Square44x44Logo.find(msData, 0) == 0)
-	{
-		secondaryTile->VisualElements->Square44x44Logo = GetUriSafe(options.Square44x44Logo);
-	}
-
-	if (options.Square70x70Logo.find(msAppx, 0) == 0 || options.Square70x70Logo.find(msData, 0) == 0)
+	if (IsValidImageUri(options.Square70x70Logo))
 	{
 		secondaryTile->VisualElements->Square70x70Logo = GetUriSafe(options.Square70x70Logo);
 	}
 
-	if (options.Wide310x150Logo.find(msAppx, 0) == 0 || options.Wide310x150Logo.find(msData, 0) == 0)
+	if (IsValidImageUri(options.Wide310x150Logo))
 	{
 		secondaryTile->VisualElements->Wide310x150Logo = GetUriSafe(options.Wide310x150Logo);
+	}
+
+	if (IsValidImageUri(options.Square310x310Logo))
+	{
+		secondaryTile->VisualElements->Square310x310Logo = GetUriSafe(options.Square310x310Logo);
 	}
 
 	secondaryTile->VisualElements->ShowNameOnSquare150x150Logo = options.ShowNameOnSquare150x150Logo;
 	secondaryTile->VisualElements->ShowNameOnWide310x150Logo = options.ShowNameOnWide310x150Logo;
 	secondaryTile->VisualElements->ShowNameOnSquare310x310Logo = options.ShowNameOnSquare310x310Logo;
 
+	secondaryTile->RoamingEnabled = options.RoamingEnabled;
+
 	if (options.BackgroundColor.length() >= 6)
 	{
 		secondaryTile->VisualElements->BackgroundColor = HexToUIColor(options.BackgroundColor);
 	}
+
 	secondaryTile->VisualElements->ForegroundText = (Windows::UI::StartScreen::ForegroundText)options.ForegroundText;
-	co_await RequestCreateInternalAsync(hWnd, secondaryTile);
+
+	return secondaryTile;
 }
 
-bool SecondaryTiles::SecondaryTileExists(wstring tileId)
+
+void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
+{
+	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+	RequestCreateInternalAsync(hWnd, secondaryTile);
+}
+
+void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
+{
+	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, desiredSize, options);
+	RequestCreateInternalAsync(hWnd, secondaryTile);
+}
+
+void SecondaryTiles::RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
+{
+	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+	secondaryTile->UpdateAsync();
+}
+
+void SecondaryTiles::RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
+{
+	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, desiredSize, options);
+	secondaryTile->UpdateAsync();
+}
+
+bool SecondaryTiles::Exists(string tileId)
 {
 	return SecondaryTile::Exists(ToPlatformString(tileId));
 }
 
-std::future<void> SecondaryTiles::RequestDeleteAsync(wstring tileId)
+void SecondaryTiles::RequestDelete(string tileId)
 {
 	auto secondaryTile = ref new SecondaryTile(ToPlatformString(tileId));
-	co_await secondaryTile->RequestDeleteAsync();
+	secondaryTile->RequestDeleteAsync();
 }
 
-wchar_t *convertCharArrayToLPCWSTR(const char* charArray)
+void SecondaryTiles::Notify(string tileId, string contentXml)
 {
-	wchar_t* wString = new wchar_t[4096];
-	MultiByteToWideChar(CP_ACP, 0, charArray, -1, wString, 4096);
-	return wString;
-}
-
-void SecondaryTiles::Update(wstring tileId)
-{
-
-	Platform::String^ myxml = 
-L"<tile><visual><binding template = \"TileSmall\"> \
+	Platform::String^ myxml =
+		L"<tile><visual><binding template = \"TileSmall\"> \
 <text hint-style = \"caption\">Jennifer Parker</text>\
 </binding>\
 <binding template = \"TileMedium\">\
@@ -206,13 +237,12 @@ L"<tile><visual><binding template = \"TileSmall\"> \
 </visual>\
 </tile>";
 
-	auto tileXml = ref new XmlDocument(); 
+	auto tileXml = ref new XmlDocument();
 	tileXml->LoadXml(myxml);
 
 	TileNotification^ tileNotification = ref new TileNotification(tileXml);
 	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
 
 	// this call fails :(
-	updater->Update(tileNotification);	
+	updater->Update(tileNotification);
 }
-

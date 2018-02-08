@@ -17,13 +17,8 @@ namespace SecondaryTiles
 	enum TileSize
 	{
 		Default = 0,
-		Square30x30 = 1,
-		Square70x70 = 2,
-		Square150x150 = 3,
-		Wide310x150 = 4,
-		Square310x310 = 5,
-		Square71x71 = 6,
-		Square44x44 = 7
+		Square150x150 = 1,
+		Wide310x150 = 2,
 	};
 
 	enum ForegroundText
@@ -32,19 +27,17 @@ namespace SecondaryTiles
 		Light = 1
 	};
 
-	struct SECONDARYTILESLIB_API TileOptions
+	class SECONDARYTILESLIB_API TileOptions
 	{
-		wstring LockScreenBadgeLogo;
-		wstring Square30x30Logo;
-		wstring Wide310x150Logo;
-		wstring Square310x310Logo;
-		wstring Square44x44Logo;
-		wstring Square70x70Logo;
-
+	public: 
+		string Square70x70Logo;
+		string Square150x150Logo;
+		string Wide310x150Logo;
+		string Square310x310Logo;
+	
 		string BackgroundColor;
 		ForegroundText ForegroundText = ForegroundText::Light;
 
-		bool LockScreenDisplayBadgeAndTileText;
 		bool ShowNameOnSquare150x150Logo;
 		bool ShowNameOnWide310x150Logo;
 		bool ShowNameOnSquare310x310Logo;
@@ -52,15 +45,19 @@ namespace SecondaryTiles
 		bool RoamingEnabled = true;
 	};
 
-	SECONDARYTILESLIB_API void Test(HWND hWnd);
+	SECONDARYTILESLIB_API void RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled);
 
-	SECONDARYTILESLIB_API std::future<void> RequestCreateAsync(HWND hWnd, wstring tileId, wstring displayName, wstring arguments, wstring squareLogo150x150Uri, TileSize desiredSize);
+	SECONDARYTILESLIB_API void RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, TileSize desiredSize, TileOptions options);
 
-	SECONDARYTILESLIB_API std::future<void> RequestCreateAsync(HWND hWnd, wstring tileId, wstring displayName, wstring arguments, wstring squareLogo150x150Uri, TileSize desiredSize, TileOptions options);
+	SECONDARYTILESLIB_API void RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled);
 
-	SECONDARYTILESLIB_API bool SecondaryTileExists(wstring tileId);
+	SECONDARYTILESLIB_API void RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, TileSize desiredSize, TileOptions options);
 
-	SECONDARYTILESLIB_API std::future<void> RequestDeleteAsync(wstring tileId);
+	SECONDARYTILESLIB_API void RequestDelete(string tileId);
 
-	SECONDARYTILESLIB_API void Update(wstring tileId);
+	SECONDARYTILESLIB_API bool Exists(string tileId);
+
+	SECONDARYTILESLIB_API void Notify(string tileId, string contentXml);
+
+	SECONDARYTILESLIB_API void Hello();
 }

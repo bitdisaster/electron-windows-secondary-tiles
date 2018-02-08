@@ -1,0 +1,39 @@
+{
+  "name": "electron-windows-secondary-tiles",
+  "version": "0.0.1",
+  "description": "Pin and manage Secondary Live Tiles on Windows 10 from Electron",
+  "main": "electron_test/maintest.js",
+  "scripts": {
+    "preinstall": "npm run build",
+    "postinstall": "node-gyp rebuild",
+    "build64": " msbuild .\\SecondaryTilesLib\\SecondaryTilesLib.sln /p:Configuration=Release /p:Platform=x64",
+    "build86": " msbuild .\\SecondaryTilesLib\\SecondaryTilesLib.sln /p:Configuration=Release /p:Platform=x86",
+    "build": "npm run build64 && npm run build86"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitdisaster/electron-windows-secondary-tiles.git"
+  },
+  "keywords": [
+    "windows10",
+    "tiles",
+    "notification"
+  ],
+  "author": {
+    "email": "jan.hannemann@outlook.com",
+    "name": "Jan Hannemann",
+    "url": "http://sumry.me/janhannemann"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitdisaster/electron-windows-secondary-tiles/issues"
+  },
+  "homepage": "https://github.com/bitdisaster/electron-windows-secondary-tiles#readme",
+  "dependencies": {
+    "bindings": "^1.3.0",
+    "nan": "^2.8.0"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^1.7.3"
+  }
+}
