@@ -112,7 +112,7 @@ SecondaryTiles.RequestDelete(`tile1`);
 ```
 
 ## Checking a Secondary Tile
-With a given tiel id the existence of an Tile can be checked.
+With a given Id the existence of an Tile can be checked.
 
 ### Example 5:
 ```
@@ -123,7 +123,7 @@ SecondaryTiles.Exists(`tile1`);
 
 ## Sending notifications to a Secondary tiles
 Each Tile can be a receiver of notifications. The notifications can be differently formatted. The content and layout is defined via XML snippets. See the documentation here.
-BEWARE: Secondary Tile notifcations are borken in the Fall Creators Update. Microsoft is aware an ships a fix in RS4.
+BEWARE: Secondary Tile notifcations are broken in the Fall Creators Update and will crash the App. Microsoft is aware and ships a fix in RS4.
 
 ### Example 6:
 ```
@@ -142,6 +142,7 @@ SecondaryTiles.Notify(`tile1`, `<tile><visual>
     <binding template = "TileLarge">
         <text hint-style = "caption">Jennifer Parker</text>
     </binding></visual></tile>`);
+```
 
 License
 
