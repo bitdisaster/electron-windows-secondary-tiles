@@ -221,28 +221,13 @@ void SecondaryTiles::RequestDelete(string tileId)
 
 void SecondaryTiles::Notify(string tileId, string contentXml)
 {
-	Platform::String^ myxml =
-		L"<tile><visual><binding template = \"TileSmall\"> \
-<text hint-style = \"caption\">Jennifer Parker</text>\
-</binding>\
-<binding template = \"TileMedium\">\
-<text hint-style = \"caption\">Jennifer Parker</text>\
-</binding>\
-<binding template = \"TileWide\">\
-<text hint-style = \"caption\">Jennifer Parker</text>\
-</binding>\
-<binding template = \"TileLarge\">\
-<text hint-style = \"caption\">Jennifer Parker</text>\
-</binding>\
-</visual>\
-</tile>";
-
 	auto tileXml = ref new XmlDocument();
-	tileXml->LoadXml(myxml);
+	tileXml->LoadXml(ToPlatformString(contentXml));
 
 	TileNotification^ tileNotification = ref new TileNotification(tileXml);
 	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
 
-	// this call fails :(
+	// this call fails on Falls Creator Update :(
+	// A fix is promised for RS4
 	updater->Update(tileNotification);
 }
