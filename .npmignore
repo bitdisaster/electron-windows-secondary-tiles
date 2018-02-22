@@ -273,13 +273,15 @@ Debug
 debug
 Release
 release
-SecondaryTilesLib/[Dd]ebug
-SecondaryTilesLib/[Rr]elease
-SecondaryTilesLib/SecondaryTilesWin32App/Debug
-SecondaryTilesLib/SecondaryTilesWin32App/Release
-SecondaryTilesLib/SecondaryTilesWin32StoreApp/bin
+x64
 
-SecondaryTilesLib/SecondaryTilesWin32Apps
-SecondaryTilesWin32StoreApp
+SecondaryTilesLib/SecondaryTilesWin32StoreApp
+SecondaryTilesLib/SecondaryTilesWin32App
+SecondaryTilesLib/SecondaryTilesLibWin32App.sln
+SecondaryTilesLib/SecondaryTilesWin32StoreApp.sln
 
 electron_test
+.git
+.vscode
+.gitattributes
+
