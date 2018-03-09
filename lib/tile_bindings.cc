@@ -27,23 +27,29 @@ SecondaryTiles::TileOptions ToTileOptions(TileOptions* tileOptionsObject) {
 
 void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) {
 	bool callWithOptions;
+	int argLengthOffset = 0;
 
-	if (info.Length() > 6
-		&& info[1]->IsString()
-		&& info[2]->IsString()
-		&& info[3]->IsString()
-		&& info[4]->IsString()
-		&& info[5]->IsBoolean()
-		&& info[6]->IsBoolean())
+	if(update)
+	{
+		argLengthOffset = 1;
+	}
+
+	if (info.Length() == 7 - argLengthOffset
+		&& info[1 - argLengthOffset]->IsString()
+		&& info[2 - argLengthOffset]->IsString()
+		&& info[3 - argLengthOffset]->IsString()
+		&& info[4 - argLengthOffset]->IsString()
+		&& info[5 - argLengthOffset]->IsBoolean()
+		&& info[6 - argLengthOffset]->IsBoolean())
 	{
 		callWithOptions = false;
 	}
-	else if (info.Length() > 5
-		&& info[1]->IsString()
-		&& info[2]->IsString()
-		&& info[3]->IsString()
-		&& info[4]->IsInt32()
-		&& info[5]->IsObject())
+	else if (info.Length() == 6 - argLengthOffset
+		&& info[1 - argLengthOffset]->IsString()
+		&& info[2 - argLengthOffset]->IsString()
+		&& info[3 - argLengthOffset]->IsString()
+		&& info[4 - argLengthOffset]->IsInt32()
+		&& info[5 - argLengthOffset]->IsObject())
 	{
 		callWithOptions = true;
 	}
@@ -53,10 +59,15 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 		return;
 	}
 
-	auto bufferObj = Nan::To<v8::Object>(info[0]).ToLocalChecked();
-	unsigned char *bufferData = (unsigned char *)node::Buffer::Data(bufferObj);
-	unsigned long handle = *reinterpret_cast<unsigned long *>(bufferData);
-	HWND hWnd = (HWND)handle;
+	HWND hWnd;
+
+	if(!update)
+	{
+		auto bufferObj = Nan::To<v8::Object>(info[0]).ToLocalChecked();
+		unsigned char *bufferData = (unsigned char *)node::Buffer::Data(bufferObj);
+		unsigned long handle = *reinterpret_cast<unsigned long *>(bufferData);
+		hWnd = (HWND)handle;
+	}
 
 	String::Utf8Value p1(info[1]->ToString());
 	std::string tileId = std::string(*p1);
@@ -82,7 +93,7 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 		}
 		else
 		{
-			SecondaryTiles::RequestUpdate(hWnd, tileId, (PCWSTR)* displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+			SecondaryTiles::RequestUpdate(tileId, (PCWSTR)* displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
 		}
 
 		info.GetReturnValue().SetNull();
@@ -103,7 +114,7 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 		}
 		else
 		{
-			SecondaryTiles::RequestUpdate(hWnd, tileId, (PCWSTR)* displayName, arguments, desiredSize, tileOptions);
+			SecondaryTiles::RequestUpdate(tileId, (PCWSTR)* displayName, arguments, desiredSize, tileOptions);
 		}
 
 		info.GetReturnValue().SetNull();
