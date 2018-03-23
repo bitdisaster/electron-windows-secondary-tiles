@@ -49,9 +49,9 @@ namespace SecondaryTiles
 
 	SECONDARYTILESLIB_API void RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, TileSize desiredSize, TileOptions options);
 
-	SECONDARYTILESLIB_API void RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled);
+	SECONDARYTILESLIB_API void RequestUpdate(string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled);
 
-	SECONDARYTILESLIB_API void RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, TileSize desiredSize, TileOptions options);
+	SECONDARYTILESLIB_API void RequestUpdate(string tileId, PCWSTR displayName, string arguments, TileSize desiredSize, TileOptions options);
 
 	SECONDARYTILESLIB_API void RequestDelete(string tileId);
 
