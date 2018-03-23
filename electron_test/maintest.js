@@ -176,8 +176,7 @@ ipc.on('update-tile5', function (event, arg) {
         ShowNameOnSquare310x310Logo: true,
         RoamingEnabled: true
     }
-    let hwnd = mainWindow.getNativeWindowHandle();
-    var bla = mod.RequestUpdateWithOptions(hwnd, 'tile-5', 'Tile 5 updated', 'args', 2, options);
+    var bla = mod.RequestUpdateWithOptions('tile-5', 'Tile 5 updated', 'args', 2, options);
     dialog.showMessageBox({
         message: bla
     });

@@ -128,7 +128,7 @@ std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondary
 	}
 }
 
-SecondaryTile^ CreateTile(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
+SecondaryTile^ CreateTile(string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
 {
 	auto secondaryTile = ref new SecondaryTile(
 		ToPlatformString(tileId),
@@ -143,7 +143,7 @@ SecondaryTile^ CreateTile(HWND hWnd, string tileId, PCWSTR displayName, string a
 	return secondaryTile;
 }
 
-SecondaryTile^ CreateTile(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
+SecondaryTile^ CreateTile(string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
 	auto secondaryTile = ref new SecondaryTile(
 		ToPlatformString(tileId),
@@ -186,25 +186,25 @@ SecondaryTile^ CreateTile(HWND hWnd, string tileId, PCWSTR displayName, string a
 
 void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
 {
-	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+	auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
 	RequestCreateInternalAsync(hWnd, secondaryTile);
 }
 
 void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
-	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, desiredSize, options);
+	auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
 	RequestCreateInternalAsync(hWnd, secondaryTile);
 }
 
-void SecondaryTiles::RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
+void SecondaryTiles::RequestUpdate(string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
 {
-	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+	auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
 	secondaryTile->UpdateAsync();
 }
 
-void SecondaryTiles::RequestUpdate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
+void SecondaryTiles::RequestUpdate(string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
-	auto secondaryTile = CreateTile(hWnd, tileId, displayName, arguments, desiredSize, options);
+	auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
 	secondaryTile->UpdateAsync();
 }
 
