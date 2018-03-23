@@ -69,23 +69,23 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 		hWnd = (HWND)handle;
 	}
 
-	String::Utf8Value p1(info[1]->ToString());
+	String::Utf8Value p1(info[1 - argLengthOffset]->ToString());
 	std::string tileId = std::string(*p1);
 
-	Local<String> p2 = Nan::To<String>(info[2]).ToLocalChecked();
+	Local<String> p2 = Nan::To<String>(info[2 - argLengthOffset]).ToLocalChecked();
 	String::Value displayName(p2);
 
-	String::Utf8Value p3(info[3]->ToString());
+	String::Utf8Value p3(info[3 - argLengthOffset]->ToString());
 	std::string arguments = std::string(*p3);
 
 
 	if (!callWithOptions)
 	{
-		String::Utf8Value p4(info[4]->ToString());
+		String::Utf8Value p4(info[4 - argLengthOffset]->ToString());
 		std::string squareLogo150x150Uri = std::string(*p4);
 
-		bool showNameOnSquare150x150Logo = info[5]->BooleanValue();
-		bool roamingEnabled = info[6]->BooleanValue();
+		bool showNameOnSquare150x150Logo = info[5 - argLengthOffset]->BooleanValue();
+		bool roamingEnabled = info[6 - argLengthOffset]->BooleanValue();
 
 		if (!update)
 		{
@@ -100,10 +100,10 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 	}
 	else
 	{
-		int32_t sizeValue = info[4]->Int32Value();
+		int32_t sizeValue = info[4 - argLengthOffset]->Int32Value();
 
 		SecondaryTiles::TileSize desiredSize = (SecondaryTiles::TileSize)sizeValue;
-		Nan::MaybeLocal<v8::Object> maybe = Nan::To<v8::Object>(info[5]);
+		Nan::MaybeLocal<v8::Object> maybe = Nan::To<v8::Object>(info[5 - argLengthOffset]);
 		auto tileOptionsObject = Nan::ObjectWrap::Unwrap<TileOptions>(maybe.ToLocalChecked());
 
 		SecondaryTiles::TileOptions tileOptions = ToTileOptions(tileOptionsObject);
