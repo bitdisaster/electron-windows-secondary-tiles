@@ -77,7 +77,7 @@ SecondaryTiles.RequestCreateWithOptions(hwnd, 'tile2', 'Hello Tile 2', 'myargs',
 ```
 
 ## Updating a Secondary Tile
-Updating tiles uses the exact same parameters as creating tiles. Just use the counter part methods `RequestUpdate` and `RequestUpdateWithOptions`;
+Updating tiles uses the exact same parameters as creating tiles minus the window handle. Just use the counter part methods `RequestUpdate` and `RequestUpdateWithOptions`;
 
 ### Example 3:
 
@@ -97,8 +97,7 @@ var options = {
     RoamingEnabled: true
     }
 
-let hwnd = mainWindow.getNativeWindowHandle();
-SecondaryTiles.RequestUpdateWithOptions(hwnd, 'tile2', 'Hello Tile 2 updated', 'myargs', 0, options);
+SecondaryTiles.RequestUpdateWithOptions('tile2', 'Hello Tile 2 updated', 'myargs', 0, options);
 ```
 
 ## Deleting Secondary Tile
