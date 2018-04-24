@@ -2,10 +2,16 @@
   "targets": [
     {
       "target_name": "tile_bindings",
-      "sources": ["lib/TileOptions.h","lib/tile_bindings.cc", "lib/TileOptions.cc" ],
+      "sources": [],
       "include_dirs": [
         "<!(node -e \"require('nan')\")",
         "./SecondaryTilesLib/SecondaryTilesLib"
+      ],
+      "conditions": [
+        ['OS=="win"', {
+          "sources": ["lib/TileOptions.h","lib/tile_bindings.cc", "lib/TileOptions.cc" ]
+          }
+        ]
       ],
       "link_settings": {
         "libraries": [
@@ -15,7 +21,7 @@
       "configurations": {
           "Debug": {
             "conditions": [
-              ['target_arch=="x64"', {
+              ['OS=="win" and target_arch=="x64"', {
                 "msvs_settings": {
                   "VCLinkerTool": {
                     "AdditionalLibraryDirectories": [
@@ -24,7 +30,7 @@
                   }
                 }
               }],
-              ['target_arch=="ia32"', {
+              ['OS=="win" and target_arch=="ia32"', {
                 "msvs_settings": {
                   "VCLinkerTool": {
                     "AdditionalLibraryDirectories": [
@@ -37,7 +43,7 @@
           },
           "Release": {
             "conditions": [
-              ['target_arch=="x64"', {
+              ['OS=="win" and target_arch=="x64"', {
                 "msvs_settings": {
                   "VCLinkerTool": {
                     "AdditionalLibraryDirectories": [
@@ -46,7 +52,7 @@
                   }
                 }
               }],
-              ['target_arch=="ia32"', {
+              ['OS=="win" and target_arch=="ia32"', {
                 "msvs_settings": {
                   "VCLinkerTool": {
                     "AdditionalLibraryDirectories": [
@@ -64,7 +70,7 @@
       "target_name": "copy_binary",
       "type":"none",
       'dependencies': ['tile_bindings'],
-      "conditions": [['target_arch=="x64"', {
+      "conditions": [['OS=="win" and target_arch=="x64"', {
         "copies":
           [
             {
@@ -77,7 +83,7 @@
             }
           ]
         }],
-        ['target_arch=="ia32"', {
+        ['OS=="win" and target_arch=="ia32"', {
         "copies":
           [
             {
