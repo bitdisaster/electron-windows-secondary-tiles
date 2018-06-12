@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include <string>
 #include <future>
+#include <VersionHelpers.h>
 
 using namespace std;
 
@@ -59,5 +60,9 @@ namespace SecondaryTiles
 
 	SECONDARYTILESLIB_API void Notify(string tileId, string contentXml);
 
-	SECONDARYTILESLIB_API void Hello();
+	SECONDARYTILESLIB_API void BadgeNotify(string tileId, string badgeXml);
+
+	SECONDARYTILESLIB_API void ClearNotification(string tileId);
+
+	SECONDARYTILESLIB_API void ClearBadge(string tileId);
 }

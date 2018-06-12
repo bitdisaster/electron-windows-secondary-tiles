@@ -28,7 +28,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 
-	
+
 	// TODO: Place code here.
 
 	// Initialize global strings
@@ -56,7 +56,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	LocalFree(szArglist);
 
-	
+
 	// Main message loop:
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
@@ -215,6 +215,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
 			NULL);
 
+		CreateWindowEx(
+			NULL,
+			L"button",
+			L"Badge Secondary Tile",
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON,
+			50,
+			250,
+			300,
+			50,
+			hWnd,
+			(HMENU)204,
+			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+			NULL);
+
+		CreateWindowEx(
+			NULL,
+			L"button",
+			L"Clear Notification",
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON,
+			50,
+			300,
+			300,
+			50,
+			hWnd,
+			(HMENU)205,
+			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+			NULL);
+
+		CreateWindowEx(
+			NULL,
+			L"button",
+			L"Clear Badge",
+			WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_DEFPUSHBUTTON,
+			50,
+			350,
+			300,
+			50,
+			hWnd,
+			(HMENU)206,
+			(HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE),
+			NULL);
+
 	}
 	case WM_COMMAND:
 	{
@@ -257,7 +299,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case 203:
 			if (wmEvent == BN_CLICKED)
 			{
-				SecondaryTiles::Notify("Tile1", "");
+				string bla = "<tile> \
+								<visual> \
+								<binding template=\"TileMedium\" branding=\"logo\"> \
+								<group> \
+								<subgroup> \
+								<text hint-style=\"caption\">Hello tile from Win32</text> \
+								</subgroup> \
+								</group> \
+								</binding> \
+								</visual> \
+								</tile>";
+
+				SecondaryTiles::Notify("Tile1", bla);
+			}
+			break;
+		case 204:
+			if (wmEvent == BN_CLICKED)
+			{
+				string badge = "<badge value = \"99\"/>";
+				SecondaryTiles::BadgeNotify("Tile1", badge);
+			}
+			break;
+		case 205:
+			if (wmEvent == BN_CLICKED)
+			{
+				SecondaryTiles::ClearNotification("Tile1");
+			}
+			break;
+		case 206:
+			if (wmEvent == BN_CLICKED)
+			{
+				SecondaryTiles::ClearBadge("Tile1");
 			}
 			break;
 		default:

@@ -181,3 +181,33 @@ ipc.on('update-tile5', function (event, arg) {
         message: bla
     });
 });
+
+ipc.on('tile1-notify', function (event, arg) {
+    console.log("tile1-notify request received")
+    var bla = mod.Notify('tile-1', `<tile>
+    <visual>
+    <binding template="TileMedium" branding="logo">
+    <group>
+    <subgroup>
+    <text hint-style="caption">Hello tile from Win32</text>
+    </subgroup>
+    </group>
+    </binding>
+    </visual>
+    </tile>`);
+});
+
+ipc.on('tile1-badge', function (event, arg) {
+    console.log("tile1-badge request received")
+    mod.BadgeNotify('tile-1', `<badge value = "99"/>`);
+});
+
+ipc.on('tile1-clear-notification', function (event, arg) {
+    console.log("tile1-clear-notification request received")
+    mod.ClearNotification('tile-1');
+});
+
+ipc.on('tile1-clear-badge', function (event, arg) {
+    console.log("tile1-clear-badge request received")
+    mod.ClearBadge('tile-1');
+});

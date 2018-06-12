@@ -103,4 +103,27 @@ button_update5.onclick = function() {
   ipc.send('update-tile5', '');
 }
 
+var button_notify1 = document.getElementById('tile1-notify');
+button_notify1.onclick = function() {
+  console.log("tile1-notify");
+  ipc.send('tile1-notify', '');
+}
+
+var button_notify2 = document.getElementById('tile1-badge');
+button_notify2.onclick = function() {
+  console.log("tile1-badge");
+  ipc.send('tile1-badge', '');
+}
+
+var button_notify3 = document.getElementById('tile1-clear-notification');
+button_notify3.onclick = function() {
+  console.log("tile1-clear-notification");
+  ipc.send('tile1-clear-notification', '');
+}
+
+var button_notify4 = document.getElementById('tile1-clear-badge');
+button_notify4.onclick = function() {
+  console.log("tile1-clear-badge");
+  ipc.send('tile1-clear-badge', '');
+}
 

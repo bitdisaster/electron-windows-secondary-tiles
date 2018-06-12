@@ -175,7 +175,55 @@ NAN_METHOD(Notify) {
 	auto p1 = Nan::To<v8::String>(info[1]).ToLocalChecked();
 	auto contentXml = std::string(*Nan::Utf8String(p1));
 
-	SecondaryTiles::Notify(tileId, contentXml);
+	 SecondaryTiles::Notify(tileId, contentXml);
+	 info.GetReturnValue().SetNull();
+}
+
+NAN_METHOD(BadgeNotify) {
+
+	if (info.Length() < 1 || !info[0]->IsString() || !info[1]->IsString())
+	{
+		Nan::ThrowTypeError("Invalid arguments, expected arguments are: tileId [string], badgeXml [string]");
+		return;
+	}
+
+	auto p0 = Nan::To<v8::String>(info[0]).ToLocalChecked();
+	auto tileId = std::string(*Nan::Utf8String(p0));
+
+	auto p1 = Nan::To<v8::String>(info[1]).ToLocalChecked();
+	auto contentXml = std::string(*Nan::Utf8String(p1));
+
+	SecondaryTiles::BadgeNotify(tileId, contentXml);
+	info.GetReturnValue().SetNull();
+}
+
+NAN_METHOD(ClearNotification) {
+
+	if (info.Length() < 1 || !info[0]->IsString())
+	{
+		Nan::ThrowTypeError("Invalid argument, expected arguments is: tileId [string]");
+		return;
+	}
+
+	auto p0 = Nan::To<v8::String>(info[0]).ToLocalChecked();
+	auto tileId = std::string(*Nan::Utf8String(p0));
+
+	SecondaryTiles::ClearNotification(tileId);
+	info.GetReturnValue().SetNull();
+}
+
+NAN_METHOD(ClearBadge) {
+
+	if (info.Length() < 1 || !info[0]->IsString())
+	{
+		Nan::ThrowTypeError("Invalid argument, expected arguments is: tileId [string]");
+		return;
+	}
+
+	auto p0 = Nan::To<v8::String>(info[0]).ToLocalChecked();
+	auto tileId = std::string(*Nan::Utf8String(p0));
+
+	SecondaryTiles::ClearBadge(tileId);
 	info.GetReturnValue().SetNull();
 }
 
@@ -185,6 +233,9 @@ NAN_MODULE_INIT(Initialize) {
 	NAN_EXPORT(target, RequestDelete);
 	NAN_EXPORT(target, Exists);
 	NAN_EXPORT(target, Notify);
+	NAN_EXPORT(target, BadgeNotify);
+	NAN_EXPORT(target, ClearNotification);
+	NAN_EXPORT(target, ClearBadge);
 	TileOptions::Init(target);
 }
 

@@ -221,13 +221,50 @@ void SecondaryTiles::RequestDelete(string tileId)
 
 void SecondaryTiles::Notify(string tileId, string contentXml)
 {
-	auto tileXml = ref new XmlDocument();
-	tileXml->LoadXml(ToPlatformString(contentXml));
+	if (SecondaryTiles::Exists(tileId) &&
+		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	{
+		 auto tileXml = ref new XmlDocument();
+		 tileXml->LoadXml(ToPlatformString(contentXml));
 
-	TileNotification^ tileNotification = ref new TileNotification(tileXml);
-	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
+		 TileNotification^ tileNotification = ref new TileNotification(tileXml);
+		 auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
 
-	// this call fails on Falls Creator Update :(
-	// A fix is promised for RS4
-	updater->Update(tileNotification);
+		 updater->Update(tileNotification);
+	}
+}
+
+void SecondaryTiles::BadgeNotify(string tileId, string badgeXml)
+{
+	if (SecondaryTiles::Exists(tileId) &&
+		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	{
+		auto tileXml = ref new XmlDocument();
+		tileXml->LoadXml(ToPlatformString(badgeXml));
+
+		BadgeNotification^ badgeNotification = ref new BadgeNotification(tileXml);
+		auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
+
+		updater->Update(badgeNotification);
+	}
+}
+
+void SecondaryTiles::ClearNotification(string tileId)
+{
+	if (SecondaryTiles::Exists(tileId) &&
+		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	{
+		auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
+		updater->Clear();
+	}
+}
+
+void SecondaryTiles::ClearBadge(string tileId)
+{
+	if (SecondaryTiles::Exists(tileId) &&
+		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	{
+		auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
+		updater->Clear();
+	}
 }
