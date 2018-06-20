@@ -1,6 +1,6 @@
 {
   "name": "electron-windows-secondary-tiles",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Pin and manage Secondary Live Tiles on Windows 10 from Electron",
   "main": "lib/index.js",
   "scripts": {

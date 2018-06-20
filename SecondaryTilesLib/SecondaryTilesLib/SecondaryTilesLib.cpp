@@ -126,6 +126,9 @@ std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondary
 
 		pIInitializeWithWindow->Release();
 	}
+
+	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
+	updater->EnableNotificationQueue(true);
 }
 
 SecondaryTile^ CreateTile(string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
@@ -200,12 +203,16 @@ void SecondaryTiles::RequestUpdate(string tileId, PCWSTR displayName, string arg
 {
 	auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
 	secondaryTile->UpdateAsync();
+	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
+	updater->EnableNotificationQueue(true);
 }
 
 void SecondaryTiles::RequestUpdate(string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
 	auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
 	secondaryTile->UpdateAsync();
+	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
+	updater->EnableNotificationQueue(true);
 }
 
 bool SecondaryTiles::Exists(string tileId)

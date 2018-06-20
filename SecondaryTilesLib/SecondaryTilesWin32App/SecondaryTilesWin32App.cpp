@@ -301,7 +301,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				string bla = "<tile> \
 								<visual> \
-								<binding template=\"TileMedium\" branding=\"logo\"> \
+								<binding template=\"TileWide\" branding=\"logo\"> \
 								<group> \
 								<subgroup> \
 								<text hint-style=\"caption\">Hello tile from Win32</text> \
@@ -312,6 +312,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								</tile>";
 
 				SecondaryTiles::Notify("Tile1", bla);
+
+				string bla2 = "<tile> \
+								<visual> \
+								<binding template=\"TileWide\" branding=\"logo\"> \
+								<group> \
+								<subgroup> \
+								<text hint-style=\"caption\">Second hello from Win32</text> \
+								</subgroup> \
+								</group> \
+								</binding> \
+								</visual> \
+								</tile>";
+
+				SecondaryTiles::Notify("Tile1", bla2);
 			}
 			break;
 		case 204:
