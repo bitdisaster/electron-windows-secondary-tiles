@@ -19,7 +19,6 @@ using namespace Windows::UI::StartScreen;
 using namespace Windows::UI::Notifications;
 using namespace Windows::Data::Xml::Dom;
 
-
 const wstring msAppxW = L"ms-appx:///";
 const wstring msDataW = L"ms-appdata:///";
 
@@ -96,6 +95,27 @@ Windows::UI::Color HexToUIColor(string hexCode)
 	std::istringstream(hexCode.substr(4, 2)) >> std::hex >> b;
 
 	return Windows::UI::ColorHelper::FromArgb(255, r, g, b);
+}
+
+bool IsNotificationSupported()
+{
+	auto versionStr = Windows::System::Profile::AnalyticsInfo::VersionInfo->DeviceFamilyVersion;
+
+	// convert to char*
+	std::wstring w(versionStr->Begin());
+	std::string a(w.begin(), w.end());
+	const char* charVersionStr = a.c_str();
+
+	unsigned long long v = atoll(charVersionStr);
+
+	unsigned short v1 = (v & 0xFFFF000000000000L) >> 48;
+	unsigned short v2 = (v & 0x0000FFFF00000000L) >> 32;
+	unsigned short v3 = (v & 0x00000000FFFF0000L) >> 16;
+	unsigned short v4 = (v & 0x000000000000FFFFL);
+
+	// Notification were introduced in the FCU. However the API had a bug
+	// that was only fixed in 10.0.17134.81
+	return v1 > 10 || v2 > 0 || v3 > 17134 || v4 >= 81;
 }
 
 Windows::UI::StartScreen::TileSize ToUITileSize(SecondaryTiles::TileSize tilSize)
@@ -228,8 +248,7 @@ void SecondaryTiles::RequestDelete(string tileId)
 
 void SecondaryTiles::Notify(string tileId, string contentXml)
 {
-	if (SecondaryTiles::Exists(tileId) &&
-		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	if (IsNotificationSupported())
 	{
 		 auto tileXml = ref new XmlDocument();
 		 tileXml->LoadXml(ToPlatformString(contentXml));
@@ -243,8 +262,7 @@ void SecondaryTiles::Notify(string tileId, string contentXml)
 
 void SecondaryTiles::BadgeNotify(string tileId, string badgeXml)
 {
-	if (SecondaryTiles::Exists(tileId) &&
-		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	if (IsNotificationSupported())
 	{
 		auto tileXml = ref new XmlDocument();
 		tileXml->LoadXml(ToPlatformString(badgeXml));
@@ -258,8 +276,7 @@ void SecondaryTiles::BadgeNotify(string tileId, string badgeXml)
 
 void SecondaryTiles::ClearNotification(string tileId)
 {
-	if (SecondaryTiles::Exists(tileId) &&
-		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	if (IsNotificationSupported())
 	{
 		auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
 		updater->Clear();
@@ -268,8 +285,7 @@ void SecondaryTiles::ClearNotification(string tileId)
 
 void SecondaryTiles::ClearBadge(string tileId)
 {
-	if (SecondaryTiles::Exists(tileId) &&
-		Metadata::ApiInformation::IsApiContractPresent("Windows.Foundation.UniversalApiContract", 6))
+	if (IsNotificationSupported())
 	{
 		auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
 		updater->Clear();

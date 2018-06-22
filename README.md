@@ -123,7 +123,7 @@ SecondaryTiles.Exists(`tile1`);
 ## Sending notifications to a Secondary tiles
 Each Tile can be a receiver of notifications. The notifications can be differently formatted. The content and layout is defined via XML snippets. See the documentation [`here`](https://docs.microsoft.com/en-us/uwp/schemas/tiles/tilesschema/schema-root).
 
-> :warning: BEWARE: Secondary Tile notifcations are broken in the Fall Creators Update and will crash the App. Microsoft is aware and ships a fix in RS4.
+> :warning: BEWARE: Secondary Tile notifications were broken in the Fall Creators Update. Microsoft shipped a fix for RS4. The notification method check for a min version of 10.0.17134.81. On any OS version below that, Notifications will be ignored.
 
 ### Example 6:
 ```
