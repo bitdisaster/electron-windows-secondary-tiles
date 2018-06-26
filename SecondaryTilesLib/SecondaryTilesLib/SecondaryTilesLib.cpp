@@ -209,30 +209,46 @@ SecondaryTile^ CreateTile(string tileId, PCWSTR displayName, string arguments, S
 
 void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
 {
-	auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
-	RequestCreateInternalAsync(hWnd, secondaryTile);
+	try
+	{
+		auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+		RequestCreateInternalAsync(hWnd, secondaryTile);
+	}
+	catch (...) {}
 }
 
 void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
-	auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
-	RequestCreateInternalAsync(hWnd, secondaryTile);
+	try
+	{
+		auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
+		RequestCreateInternalAsync(hWnd, secondaryTile);
+	}
+	catch (...) {}
 }
 
 void SecondaryTiles::RequestUpdate(string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
 {
-	auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
-	secondaryTile->UpdateAsync();
-	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
-	updater->EnableNotificationQueue(true);
+	try
+	{
+		auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
+		secondaryTile->UpdateAsync();
+		auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
+		updater->EnableNotificationQueue(true);
+	}
+	catch (...) {}
 }
 
 void SecondaryTiles::RequestUpdate(string tileId, PCWSTR displayName, string arguments, SecondaryTiles::TileSize desiredSize, SecondaryTiles::TileOptions options)
 {
-	auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
-	secondaryTile->UpdateAsync();
-	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
-	updater->EnableNotificationQueue(true);
+	try
+	{
+		auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
+		secondaryTile->UpdateAsync();
+		auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
+		updater->EnableNotificationQueue(true);
+	}
+	catch (...) {}
 }
 
 bool SecondaryTiles::Exists(string tileId)
@@ -242,52 +258,72 @@ bool SecondaryTiles::Exists(string tileId)
 
 void SecondaryTiles::RequestDelete(string tileId)
 {
-	auto secondaryTile = ref new SecondaryTile(ToPlatformString(tileId));
-	secondaryTile->RequestDeleteAsync();
+	try
+	{
+		auto secondaryTile = ref new SecondaryTile(ToPlatformString(tileId));
+		secondaryTile->RequestDeleteAsync();
+	}
+	catch (...) {}
 }
 
 void SecondaryTiles::Notify(string tileId, string contentXml)
 {
-	if (IsNotificationSupported())
+	if (Exists(tileId) && IsNotificationSupported())
 	{
-		 auto tileXml = ref new XmlDocument();
-		 tileXml->LoadXml(ToPlatformString(contentXml));
+		try
+		{
+			auto tileXml = ref new XmlDocument();
+			tileXml->LoadXml(ToPlatformString(contentXml));
 
-		 TileNotification^ tileNotification = ref new TileNotification(tileXml);
-		 auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
+			TileNotification^ tileNotification = ref new TileNotification(tileXml);
+			auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
 
-		 updater->Update(tileNotification);
+			updater->Update(tileNotification);
+		}
+		catch (...) {}
 	}
 }
 
 void SecondaryTiles::BadgeNotify(string tileId, string badgeXml)
 {
-	if (IsNotificationSupported())
+	if (Exists(tileId) && IsNotificationSupported())
 	{
-		auto tileXml = ref new XmlDocument();
-		tileXml->LoadXml(ToPlatformString(badgeXml));
+		try
+		{
+			auto tileXml = ref new XmlDocument();
+			tileXml->LoadXml(ToPlatformString(badgeXml));
 
-		BadgeNotification^ badgeNotification = ref new BadgeNotification(tileXml);
-		auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
+			BadgeNotification^ badgeNotification = ref new BadgeNotification(tileXml);
+			auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
 
-		updater->Update(badgeNotification);
+			updater->Update(badgeNotification);
+		}
+		catch (...) {}
 	}
 }
 
 void SecondaryTiles::ClearNotification(string tileId)
 {
-	if (IsNotificationSupported())
+	if (Exists(tileId) && IsNotificationSupported())
 	{
-		auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
-		updater->Clear();
+		try
+		{
+			auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(ToPlatformString(tileId));
+			updater->Clear();
+		}
+		catch (...) {}
 	}
 }
 
 void SecondaryTiles::ClearBadge(string tileId)
 {
-	if (IsNotificationSupported())
+	if (Exists(tileId) && IsNotificationSupported())
 	{
-		auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
-		updater->Clear();
+		try
+		{
+			auto updater = BadgeUpdateManager::CreateBadgeUpdaterForSecondaryTile(ToPlatformString(tileId));
+			updater->Clear();
+		}
+		catch (...) {}
 	}
 }
