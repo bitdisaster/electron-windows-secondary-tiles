@@ -133,7 +133,7 @@ Windows::UI::StartScreen::TileSize ToUITileSize(SecondaryTiles::TileSize tilSize
 	}
 }
 
-std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondaryTile)
+std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondaryTile, string tileId, int initialBadgeCount)
 {
 	IInitializeWithWindow* pIInitializeWithWindow;
 	IInspectable* iInspectable = reinterpret_cast<IInspectable*>(secondaryTile);
@@ -149,6 +149,11 @@ std::future<void> RequestCreateInternalAsync(HWND hWnd, SecondaryTile ^secondary
 
 	auto updater = TileUpdateManager::CreateTileUpdaterForSecondaryTile(secondaryTile->TileId);
 	updater->EnableNotificationQueue(true);
+
+	if (initialBadgeCount > 0)
+	{
+		SecondaryTiles::BadgeNotify(tileId, "<badge value = \"" + std::to_string(initialBadgeCount) + "\"/>");
+	}
 }
 
 SecondaryTile^ CreateTile(string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled)
@@ -212,7 +217,7 @@ void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName,
 	try
 	{
 		auto secondaryTile = CreateTile(tileId, displayName, arguments, squareLogo150x150Uri, showNameOnSquare150x150Logo, roamingEnabled);
-		RequestCreateInternalAsync(hWnd, secondaryTile);
+		RequestCreateInternalAsync(hWnd, secondaryTile, tileId, 0);
 	}
 	catch (...) {}
 }
@@ -222,7 +227,7 @@ void SecondaryTiles::RequestCreate(HWND hWnd, string tileId, PCWSTR displayName,
 	try
 	{
 		auto secondaryTile = CreateTile(tileId, displayName, arguments, desiredSize, options);
-		RequestCreateInternalAsync(hWnd, secondaryTile);
+		RequestCreateInternalAsync(hWnd, secondaryTile, tileId, options.InitialBadgeCount);
 	}
 	catch (...) {}
 }
@@ -266,7 +271,7 @@ void SecondaryTiles::RequestDelete(string tileId)
 	catch (...) {}
 }
 
-void SecondaryTiles::Notify(string tileId, string contentXml)
+void SecondaryTiles::Notify(string tileId, PCWSTR contentXml)
 {
 	if (Exists(tileId) && IsNotificationSupported())
 	{

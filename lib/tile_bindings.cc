@@ -21,6 +21,7 @@ SecondaryTiles::TileOptions ToTileOptions(TileOptions* tileOptionsObject) {
 	tileOptions.ShowNameOnWide310x150Logo = tileOptionsObject->ShowNameOnWide310x150Logo;
 	tileOptions.ShowNameOnSquare310x310Logo = tileOptionsObject->ShowNameOnSquare310x310Logo;
 	tileOptions.RoamingEnabled = tileOptionsObject->RoamingEnabled;
+	tileOptions.InitialBadgeCount = tileOptionsObject->InitialBadgeCount;
 
 	return tileOptions;
 }
@@ -29,7 +30,7 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 	bool callWithOptions;
 	int argLengthOffset = 0;
 
-	if(update)
+	if (update)
 	{
 		argLengthOffset = 1;
 	}
@@ -61,7 +62,7 @@ void RequestCreateOrUpdateInternal(Nan::NAN_METHOD_ARGS_TYPE info, bool update) 
 
 	HWND hWnd;
 
-	if(!update)
+	if (!update)
 	{
 		auto bufferObj = Nan::To<v8::Object>(info[0]).ToLocalChecked();
 		unsigned char *bufferData = (unsigned char *)node::Buffer::Data(bufferObj);
@@ -172,11 +173,11 @@ NAN_METHOD(Notify) {
 	auto p0 = Nan::To<v8::String>(info[0]).ToLocalChecked();
 	auto tileId = std::string(*Nan::Utf8String(p0));
 
-	auto p1 = Nan::To<v8::String>(info[1]).ToLocalChecked();
-	auto contentXml = std::string(*Nan::Utf8String(p1));
-
-	 SecondaryTiles::Notify(tileId, contentXml);
-	 info.GetReturnValue().SetNull();
+	auto p1 = Nan::To<String>(info[1]).ToLocalChecked();
+	String::Value contentXml(p1);
+	
+	SecondaryTiles::Notify(tileId, (PCWSTR)* contentXml);
+	info.GetReturnValue().SetNull();
 }
 
 NAN_METHOD(BadgeNotify) {

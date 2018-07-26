@@ -88,7 +88,8 @@ ipc.on('pin-tile2', function (event, arg) {
         ShowNameOnSquare150x150Logo: true,
         ShowNameOnWide310x150Logo: true,
         ShowNameOnSquare310x310Logo: true,
-        RoamingEnabled: true
+        RoamingEnabled: true,
+        InitialBadgeCount: 42
     }
     let hwnd = mainWindow.getNativeWindowHandle();
     mod.RequestCreateWithOptions(hwnd, 'tile-2', 'Tile 2 äöü わたし', 'args', 0, options);
@@ -189,7 +190,7 @@ ipc.on('tile1-notify', function (event, arg) {
     <binding template="TileMedium" branding="logo">
     <group>
     <subgroup>
-    <text hint-style="caption">Hello tile from Win32</text>
+    <text hint-style="caption">äöü わたし Hello tile from Win32</text>
     </subgroup>
     </group>
     </binding>

@@ -25,6 +25,8 @@ NAN_MODULE_INIT(TileOptions::Init) {
 	Nan::SetAccessor(ctor->InstanceTemplate(), Nan::New("ShowNameOnSquare310x310Logo").ToLocalChecked(), TileOptions::HandleGetters, TileOptions::HandleSetters);
 	Nan::SetAccessor(ctor->InstanceTemplate(), Nan::New("RoamingEnabled").ToLocalChecked(), TileOptions::HandleGetters, TileOptions::HandleSetters);
 
+	Nan::SetAccessor(ctor->InstanceTemplate(), Nan::New("InitialBadgeCount").ToLocalChecked(), TileOptions::HandleGetters, TileOptions::HandleSetters);
+
 	target->Set(Nan::New("TileOptions").ToLocalChecked(), ctor->GetFunction());
 }
 
@@ -81,6 +83,9 @@ NAN_GETTER(TileOptions::HandleGetters) {
 	else if (propertyName == "RoamingEnabled") {
 		info.GetReturnValue().Set(self->RoamingEnabled);
 	}
+	else if (propertyName == "InitialBadgeCount") {
+		info.GetReturnValue().Set(self->InitialBadgeCount);
+	}
 	else {
 		info.GetReturnValue().Set(Nan::Undefined());
 	}
@@ -125,5 +130,8 @@ NAN_SETTER(TileOptions::HandleSetters) {
 	}
 	else if (propertyName == "RoamingEnabled") {
 		self->RoamingEnabled = value->BooleanValue();
+	}
+	else if (propertyName == "InitialBadgeCount") {
+		self->InitialBadgeCount = value->Int32Value();
 	}
 }

@@ -44,6 +44,7 @@ namespace SecondaryTiles
 		bool ShowNameOnSquare310x310Logo;
 
 		bool RoamingEnabled = true;
+		int InitialBadgeCount = 0;
 	};
 
 	SECONDARYTILESLIB_API void RequestCreate(HWND hWnd, string tileId, PCWSTR displayName, string arguments, string squareLogo150x150Uri, bool showNameOnSquare150x150Logo, bool roamingEnabled);
@@ -58,7 +59,7 @@ namespace SecondaryTiles
 
 	SECONDARYTILESLIB_API bool Exists(string tileId);
 
-	SECONDARYTILESLIB_API void Notify(string tileId, string contentXml);
+	SECONDARYTILESLIB_API void Notify(string tileId, PCWSTR contentXml);
 
 	SECONDARYTILESLIB_API void BadgeNotify(string tileId, string badgeXml);
 
