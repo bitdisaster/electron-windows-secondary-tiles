@@ -36,7 +36,4 @@
   "devDependencies": {
     "electron-rebuild": "^1.7.3"
   },
-  "os": [
-    "win32"
-  ]
 }
