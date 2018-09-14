@@ -9,15 +9,13 @@
       ],
       "conditions": [
         ['OS=="win"', {
-          "sources": ["lib/TileOptions.h","lib/tile_bindings.cc", "lib/TileOptions.cc" ]
+            "sources": ["lib/TileOptions.h","lib/tile_bindings.cc", "lib/TileOptions.cc" ],
+            "link_settings": {
+              "libraries": ["-lSecondaryTilesLib.lib",]
+            }
           }
         ]
-      ],
-      "link_settings": {
-        "libraries": [
-          "-lSecondaryTilesLib.lib",
-          ]
-      },
+      ],      
       "configurations": {
           "Debug": {
             "conditions": [

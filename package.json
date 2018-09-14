@@ -1,14 +1,11 @@
 {
   "name": "electron-windows-secondary-tiles",
-  "version": "0.2.5",
+  "version": "0.2.7",
   "description": "Pin and manage Secondary Live Tiles on Windows 10 from Electron",
   "main": "lib/index.js",
   "scripts": {
-    "preinstall": "npm run build",
-    "postinstall": "node-gyp rebuild",
-    "build64": " msbuild .\\SecondaryTilesLib\\SecondaryTilesLib.sln /p:Configuration=Release /p:Platform=x64",
-    "build86": " msbuild .\\SecondaryTilesLib\\SecondaryTilesLib.sln /p:Configuration=Release /p:Platform=x86",
-    "build": "npm run build64 && npm run build86"
+    "preinstall": "node ./pre-build.js",
+    "postinstall": "node-gyp rebuild"
   },
   "repository": {
     "type": "git",
