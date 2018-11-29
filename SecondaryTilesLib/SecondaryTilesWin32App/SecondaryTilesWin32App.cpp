@@ -140,7 +140,6 @@ void Test(HWND hWnd)
 	options->Square70x70Logo = "undefined"; // "ms-appx:///images/Square70x70Logo.png";
 
 	SecondaryTiles::RequestCreate(hWnd, "Tile1", L"Hello Options X", "tileId=Tile1", SecondaryTiles::TileSize::Default, *options);
-	//SecondaryTiles::RequestCreateAsync(hWnd, L"Tile1", L"Hello Options Y", L"tileId=Tile1", L"ms-appx:///images/Square150x150Logo.png", true);
 }
 
 //
@@ -299,21 +298,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case 203:
 			if (wmEvent == BN_CLICKED)
 			{
-				string bla = "<tile> \
-								<visual> \
-								<binding template=\"TileWide\" branding=\"logo\"> \
-								<group> \
-								<subgroup> \
-								<text hint-style=\"caption\">Hello tile from Win32</text> \
-								</subgroup> \
-								</group> \
-								</binding> \
-								</visual> \
-								</tile>";
-
-				SecondaryTiles::Notify("Tile1", bla);
-
-				string bla2 = "<tile> \
+				auto bla = L"<tile> \
 								<visual> \
 								<binding template=\"TileWide\" branding=\"logo\"> \
 								<group> \
@@ -325,7 +310,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								</visual> \
 								</tile>";
 
-				SecondaryTiles::Notify("Tile1", bla2);
+				SecondaryTiles::Notify("Tile1", bla);
 			}
 			break;
 		case 204:
